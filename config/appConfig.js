@@ -1,10 +1,11 @@
 let appConfig = {};
 
-appConfig.port = 3000;
+appConfig.port = process.env.port || 8081; //3000;
 appConfig.allowedCorsOrigin = "*";
 appConfig.env = "dev";
 appConfig.db = {
-    uri: 'mongodb://127.0.0.1:27017/LiveTodoAppDB',
+    //uri: 'mongodb://127.0.0.1:27017/LiveTodoAppDB',
+    uri: 'mongodb+srv://sarthakJgd:brye6QzRFulKmueh@cluster0-wrg5n.mongodb.net/test?retryWrites=true',
 }
 appConfig.apiVersion = '/api/v1';
 

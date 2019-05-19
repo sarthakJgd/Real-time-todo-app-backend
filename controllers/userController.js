@@ -962,7 +962,6 @@ module.exports = {
     sendFriendRequest: sendFriendRequest,
     acceptFriendRequest: acceptFriendRequest,
     rejectFriendRequest: rejectFriendRequest,    
-    //deleteUser: deleteUser,
     getSingleUser: getSingleUser,
     PasswordResetMail: PasswordResetMail,
     resetPassword: resetPassword,
