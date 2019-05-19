@@ -1,0 +1,26 @@
+{
+  "name": "livetodobackend",
+  "version": "1.0.0",
+  "description": "REST API's for Live To-Do app.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.16.4",
+    "http": "0.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.25",
+    "mongoose": "^5.5.5",
+    "nodemailer": "^6.1.1",
+    "nodemon": "^1.19.0",
+    "pino": "^5.12.3",
+    "shortid": "^2.2.14",
+    "socket.io": "^2.2.0"
+  }
+}
