@@ -424,7 +424,8 @@ let PasswordResetMail = (req, res) => {
                 email: req.body.email,
                 authToken: details.authToken,
                 name: `${details.userDetails.firstName} ${details.userDetails.lastName}`,
-                resetPasswordBaseUrl: "http://localhost:4200/resetpassword",
+                resetPasswordBaseUrl: "http://real-time-todo-app.s3-website.us-east-2.amazonaws.com/resetpassword",
+                //"http://localhost:4200/resetpassword",
                 userId: details.userDetails.userId
             };
 

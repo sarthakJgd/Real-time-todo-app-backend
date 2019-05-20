@@ -1,4 +1,4 @@
-'use strict'
+
 /**
  * Module Dependencies
  */
@@ -41,15 +41,15 @@ let userSchema = new Schema({
     default:""
   },
   sentRequests:[{
-    userId: {type: String,  default: '',unique: true},
+    userId: {type: String,  default: ''},
     userName: {type: String, default: ''},
     }],
     receivedRequests: [{
-    userId: {type: String,  default: '',unique: true},
+    userId: {type: String,  default: ''},
     userName: {type: String, default: ''}
     }],
     friendsList: [{
-    friendId: {type: String,  default: '',unique: true},
+    friendId: {type: String,  default: ''},
     friendName: {type: String, default: ''}
     }],
     totalRequest: {
