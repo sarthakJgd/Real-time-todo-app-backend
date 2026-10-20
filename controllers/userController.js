@@ -47,7 +47,6 @@ let signUpFunction = (req, res) => {
                         let apiResponse = response.generate(true, 'Failed To Create User', 500, null)
                         reject(apiResponse)
                     } else if (check.isEmpty(retrievedUserDetails)) {
-                        console.log(req.body)
                         let newUser = new UserModel({
                             userId: shortid.generate(),
                             firstName: req.body.firstName,
@@ -60,7 +59,7 @@ let signUpFunction = (req, res) => {
                         })
                         newUser.save((err, newUser) => {
                             if (err) {
-                                console.log(err)
+                                logger.error('Operation failed', 'ApplicationController', 10)
                                 logger.error(err.message, 'userController: createUser', 10)
                                 let apiResponse = response.generate(true, 'Failed to create new User', 500, null)
                                 reject(apiResponse)
@@ -87,7 +86,7 @@ let signUpFunction = (req, res) => {
             res.send(apiResponse)
         })
         .catch((err) => {
-            console.log(err);
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.send(err);
         })
 
@@ -97,15 +96,12 @@ let signUpFunction = (req, res) => {
 // start of login function 
 let loginFunction = (req, res) => {
     let findUser = () => {
-        console.log("findUser");
         return new Promise((resolve, reject) => {
             if (req.body.email) {
-                console.log("req body email is there");
-                console.log(req.body);
                 UserModel.findOne({ email: req.body.email }, (err, userDetails) => {
                     /* handle the error here if the User is not found */
                     if (err) {
-                        console.log(err)
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error('Failed To Retrieve User Data', 'userController: findUser()', 10)
                         /* generate the error message and the api response message here */
                         let apiResponse = response.generate(true, 'Failed To Find User Details', 500, null)
@@ -130,11 +126,10 @@ let loginFunction = (req, res) => {
         })
     }
     let validatePassword = (retrievedUserDetails) => {
-        console.log("validatePassword");
         return new Promise((resolve, reject) => {
             passwordLib.comparePassword(req.body.password, retrievedUserDetails.password, (err, isMatch) => {
                 if (err) {
-                    console.log(err)
+                    logger.error('Operation failed', 'ApplicationController', 10)
                     logger.error(err.message, 'userController: validatePassword()', 10)
                     let apiResponse = response.generate(true, 'Login Failed', 500, null)
                     reject(apiResponse)
@@ -156,11 +151,10 @@ let loginFunction = (req, res) => {
     }
 
     let generateToken = (userDetails) => {
-        console.log("generate token");
         return new Promise((resolve, reject) => {
             token.generateToken(userDetails, (err, tokenDetails) => {
                 if (err) {
-                    console.log(err)
+                    logger.error('Operation failed', 'ApplicationController', 10)
                     let apiResponse = response.generate(true, 'Failed To Generate Token', 500, null)
                     reject(apiResponse)
                 } else {
@@ -172,23 +166,21 @@ let loginFunction = (req, res) => {
         })
     }
     let saveToken = (tokenDetails) => {
-        console.log("save token");
         return new Promise((resolve, reject) => {
             AuthModel.findOne({ userId: tokenDetails.userId }, (err, retrievedTokenDetails) => {
                 if (err) {
-                    console.log(err.message, 'userController: saveToken', 10)
+                    logger.error('Operation failed', 'ApplicationController', 10)
                     let apiResponse = response.generate(true, 'Failed To Generate Token', 500, null)
                     reject(apiResponse)
                 } else if (check.isEmpty(retrievedTokenDetails)) {
                     let newAuthToken = new AuthModel({
                         userId: tokenDetails.userId,
                         authToken: tokenDetails.token,
-                        tokenSecret: tokenDetails.tokenSecret,
                         tokenGenerationTime: time.now()
                     })
                     newAuthToken.save((err, newTokenDetails) => {
                         if (err) {
-                            console.log(err)
+                            logger.error('Operation failed', 'ApplicationController', 10)
                             logger.error(err.message, 'userController: saveToken', 10)
                             let apiResponse = response.generate(true, 'Failed To Generate Token', 500, null)
                             reject(apiResponse)
@@ -202,11 +194,10 @@ let loginFunction = (req, res) => {
                     })
                 } else {
                     retrievedTokenDetails.authToken = tokenDetails.token
-                    retrievedTokenDetails.tokenSecret = tokenDetails.tokenSecret
                     retrievedTokenDetails.tokenGenerationTime = time.now()
                     retrievedTokenDetails.save((err, newTokenDetails) => {
                         if (err) {
-                            console.log(err)
+                            logger.error('Operation failed', 'ApplicationController', 10)
                             logger.error(err.message, 'userController: saveToken', 10)
                             let apiResponse = response.generate(true, 'Failed To Generate Token', 500, null)
                             reject(apiResponse)
@@ -233,8 +224,8 @@ let loginFunction = (req, res) => {
             res.send(apiResponse)
         })
         .catch((err) => {
-            console.log("errorhandler");
-            console.log(err);
+            logger.error('Operation failed', 'ApplicationController', 10)
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.status(err.status)
             res.send(err)
         })
@@ -248,7 +239,7 @@ let loginFunction = (req, res) => {
 let logout = (req, res) => {
     AuthModel.findOneAndRemove({ userId: req.user.userId }, (err, result) => {
         if (err) {
-            console.log(err)
+            logger.error('Operation failed', 'ApplicationController', 10)
             logger.error(err.message, 'user Controller: logout', 10)
             let apiResponse = response.generate(true, `error occurred: ${err.message}`, 500, null)
             res.send(apiResponse)
@@ -266,15 +257,13 @@ let PasswordResetMail = (req, res) => {
     let findUser = () => {
         return new Promise((resolve, reject) => {
             if (req.body.email) {
-                console.log("req body email is there");
-                console.log(req.body);
                 UserModel.findOne({
                     email: req.body.email
                 },
                     (err, userDetails) => {
                         /* handle the error here if the User is not found */
                         if (err) {
-                            console.log(err);
+                            logger.error('Operation failed', 'ApplicationController', 10)
                             logger.error(
                                 "Failed To Retrieve User Data",
                                 "userController: sendmail.findUser()",
@@ -327,11 +316,10 @@ let PasswordResetMail = (req, res) => {
         delete userDetailsobj._id;
         delete userDetailsobj.__v;
         delete userDetailsobj.createdOn;
-        console.log("generate token");
         return new Promise((resolve, reject) => {
             token.generateToken(userDetails, (err, tokenDetails) => {
                 if (err) {
-                    console.log(err);
+                    logger.error('Operation failed', 'ApplicationController', 10)
                     let apiResponse = response.generate(
                         true,
                         "Failed To Generate Token",
@@ -348,14 +336,13 @@ let PasswordResetMail = (req, res) => {
         });
     };
     let saveToken = tokenDetails => {
-        console.log("save token");
         return new Promise((resolve, reject) => {
             AuthModel.findOne({
                 userId: tokenDetails.userId
             },
                 (err, retrievedTokenDetails) => {
                     if (err) {
-                        console.log(err.message, "userController: saveToken", 10);
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         let apiResponse = response.generate(
                             true,
                             "Failed To Generate Token",
@@ -367,12 +354,11 @@ let PasswordResetMail = (req, res) => {
                         let newAuthToken = new AuthModel({
                             userId: tokenDetails.userId,
                             authToken: tokenDetails.token,
-                            tokenSecret: tokenDetails.tokenSecret,
                             tokenGenerationTime: time.now()
                         });
                         newAuthToken.save((err, newTokenDetails) => {
                             if (err) {
-                                console.log(err);
+                                logger.error('Operation failed', 'ApplicationController', 10)
                                 logger.error(err.message, "userController: saveToken", 10);
                                 let apiResponse = response.generate(
                                     true,
@@ -391,11 +377,10 @@ let PasswordResetMail = (req, res) => {
                         });
                     } else {
                         retrievedTokenDetails.authToken = tokenDetails.token;
-                        retrievedTokenDetails.tokenSecret = tokenDetails.tokenSecret;
                         retrievedTokenDetails.tokenGenerationTime = time.now();
                         retrievedTokenDetails.save((err, newTokenDetails) => {
                             if (err) {
-                                console.log(err);
+                                logger.error('Operation failed', 'ApplicationController', 10)
                                 logger.error(err.message, "userController: saveToken", 10);
                                 let apiResponse = response.generate(
                                     true,
@@ -431,16 +416,14 @@ let PasswordResetMail = (req, res) => {
 
             var transporter = nodemailer.createTransport({
                 service: "gmail",
-                /* temporary email */
                 auth: {
-                    user: "vivekedwisor@gmail.com",
-                    pass: "edvivekxyz"
-                },
-                tls: { rejectUnauthorized: false }
+                    user: process.env.SMTP_USER,
+                    pass: process.env.SMTP_PASS
+                }
             });
 
             var mailOptions = {
-                from: '"Todo Admin" <vivekedwisor@gmail.com>',
+                from: `"Todo Admin" <${process.env.SMTP_USER}>`,
                 to: req.body.email,
                 template: "forgot-password-email",
                 subject: "Password reset Link",
@@ -461,7 +444,7 @@ let PasswordResetMail = (req, res) => {
 
             transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
-                    console.log(error);
+                    logger.error('Operation failed', 'ApplicationController', 10)
                     logger.error(
                         "Sent Mail Failed!",
                         "User Controller: sendResetMail()",
@@ -475,7 +458,6 @@ let PasswordResetMail = (req, res) => {
                     );
                     reject(apiResponse);
                 } else {
-                    console.log(info);
                     resolve(data);
                 }
             });
@@ -488,7 +470,7 @@ let PasswordResetMail = (req, res) => {
                 userId: userDetails.userId
             }, (err, result) => {
                 if (err) {
-                    console.log(err)
+                    logger.error('Operation failed', 'ApplicationController', 10)
                     logger.error(err.message, 'user Controller: resetPassword', 10)
                     let apiResponse = response.generate(true, `error occurred: ${err.message}`, 500, null)
                     reject(apiResponse);
@@ -514,7 +496,7 @@ let PasswordResetMail = (req, res) => {
             res.send(resolve);
         })
         .catch(err => {
-            console.log(err);
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.send(err);
         });
 }; //end of sendmail function
@@ -524,15 +506,13 @@ let resetPassword = (req, res) => {
     let findUser = () => {
         return new Promise((resolve, reject) => {
             if (req.body.userId) {
-                console.log("req body userId is there");
-                console.log(req.body);
                 UserModel.findOne({
                     userId: req.body.userId
                 },
                     (err, userDetails) => {
                         /* handle the error here if the User is not found */
                         if (err) {
-                            console.log(err);
+                            logger.error('Operation failed', 'ApplicationController', 10)
                             logger.error(
                                 "Failed To Retrieve User Data",
                                 "resetPassword: findUser()",
@@ -578,10 +558,8 @@ let resetPassword = (req, res) => {
 
 
     let updatePassword = () => {
-        console.log("updatePassword");
         return new Promise((resolve, reject) => {
             let userId = req.body.userId;
-            console.log("In update password block\n" + req.body.userId + '\n' + req.body.passw)
             UserModel.update({
                 userId: req.body.userId
             }, {
@@ -590,7 +568,7 @@ let resetPassword = (req, res) => {
                     }
                 }).exec((err, result) => {
                     if (err) {
-                        console.log(err);
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(err.message, "User Controller:editUser", 10);
                         let apiResponse = response.generate(
                             true,
@@ -620,12 +598,11 @@ let resetPassword = (req, res) => {
                 resolve
             );
             res.status(200);
-            console.log(apiResponse);
             res.send(apiResponse);
         })
         .catch(err => {
-            console.log("errorhandler");
-            console.log(err);
+            logger.error('Operation failed', 'ApplicationController', 10)
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.status(err.status);
             res.send(err);
         });
@@ -639,7 +616,7 @@ let getAllUser = (req, res) => {
         .lean()
         .exec((err, result) => {
             if (err) {
-                console.log(err)
+                logger.error('Operation failed', 'ApplicationController', 10)
                 logger.error(err.message, 'User Controller: getAllUser', 10)
                 let apiResponse = response.generate(true, 'Failed To Find User Details', 500, null)
                 res.send(apiResponse)
@@ -661,17 +638,15 @@ let sendFriendRequest = (req, res) => {
 
 
     addSentRequest = () => {
-        console.log("\nin addSentRequest");
         return new Promise((resolve, reject) => {
             let sentRequest = {
                 userId: req.body.requestedId,
                 userName: req.body.requestedName
             }
-            console.log("\nthe requestor*********\n"+req.body.requestorId+' '+req.body.requestorName);
             UserModel.updateOne({ 'userId': req.body.requestorId }, { $push: { sentRequests: sentRequest } })
                 .exec((err, result) => {
                     if (err) {
-                        console.log(err)
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(err.message, 'User Controller:editUser', 10)
                         let apiResponse = response.generate(true, 'Failed To edit requestor user details', 500, null)
                         reject(apiResponse)
@@ -688,17 +663,15 @@ let sendFriendRequest = (req, res) => {
     }
 
     addReceivedRequest = () => {
-        console.log("\nin addReceivedRequest");
         return new Promise((resolve, reject) => {
             let receivedRequest = {
                 userId: req.body.requestorId,
                 userName: req.body.requestorName
             }
-            console.log("\nthe requested*********\n"+req.body.requestedId+' '+req.body.requestedName);
             UserModel.updateOne({ 'userId': req.body.requestedId }, { $push: { receivedRequests: receivedRequest } })
                 .exec((err, result) => {
                     if (err) {
-                        console.log(err)
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(err.message, 'User Controller:editUser', 10)
                         let apiResponse = response.generate(true, 'Failed To edit requested user details', 500, null)
                         reject(apiResponse)
@@ -722,7 +695,7 @@ let sendFriendRequest = (req, res) => {
             res.send(apiResponse)
         })
         .catch((err) => {
-            console.log(err);
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.send(err);
         })
 }
@@ -734,7 +707,7 @@ let getSingleUser = (req, res) => {
         .lean()
         .exec((err, result) => {
             if (err) {
-                console.log(err)
+                logger.error('Operation failed', 'ApplicationController', 10)
                 logger.error(err.message, 'User Controller: getSingleUser', 10)
                 let apiResponse = response.generate(true, 'Failed To Find User Details', 500, null)
                 res.send(apiResponse)
@@ -756,17 +729,15 @@ let acceptFriendRequest = (req, res) => {
 
 
     removeSentRequest = () => {
-        console.log("\nin removeSentRequest");
         return new Promise((resolve, reject) => {
             let sentRequest = {
                 userId: req.body.requestedId,
                 userName: req.body.requestedName
             }
-            console.log("\nthe requestor*********\n"+req.body.requestorId+' '+req.body.requestorName);
             UserModel.updateOne({ 'userId':req.body.requestorId },{$pull : {sentRequests : {$in: sentRequest }}})
                 .exec((err, result) => {
                     if (err) {
-                        console.log(err)
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(err.message, 'User Controller:editUser', 10)
                         let apiResponse = response.generate(true, 'Failed To remove sent request from user details', 500, null)
                         reject(apiResponse)
@@ -783,17 +754,15 @@ let acceptFriendRequest = (req, res) => {
     }
 
     addInFriendListForRequestorUser = () => {
-        console.log("\nin addReceivedRequest");
         return new Promise((resolve, reject) => {
             let friend = {
                 friendId: req.body.requestedId,
                 friendName: req.body.requestedName
             }
-            console.log("\nthe requested*********\n"+req.body.requestedId+' '+req.body.requestedName);
             UserModel.updateOne({ 'userId': req.body.requestorId }, { $push: { friendsList: friend } })
                 .exec((err, result) => {
                     if (err) {
-                        console.log(err)
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(err.message, 'User Controller:editUser', 10)
                         let apiResponse = response.generate(true, 'Failed To add in friends list of requestor', 500, null)
                         reject(apiResponse)
@@ -810,18 +779,16 @@ let acceptFriendRequest = (req, res) => {
     }
 
     removeReceivedRequest = () => {
-        console.log("\nin removeReceivedRequest");
         return new Promise((resolve, reject) => {
             let receivedRequest = {
                 userId: req.body.requestorId,
                 userName: req.body.requestorName
             }
-            console.log("\nthe requestor*********\n"+req.body.requestorId+' '+req.body.requestorName);
             UserModel.updateOne({ 'userId':req.body.requestedId },{$pull : {receivedRequests : {$in: receivedRequest }}})
             //UserModel.updateOne({ 'userId':req.body.requestorId }, { $push: { sentRequests: sentRequest } })
                 .exec((err, result) => {
                     if (err) {
-                        console.log(err)
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(err.message, 'User Controller:editUser', 10)
                         let apiResponse = response.generate(true, 'Failed To remove received request from user details', 500, null)
                         reject(apiResponse)
@@ -838,17 +805,15 @@ let acceptFriendRequest = (req, res) => {
     }
 
     addInFriendListForRequestedUser = () => {
-        console.log("\nin addReceivedRequest");
         return new Promise((resolve, reject) => {
             let friend = {
                 friendId: req.body.requestorId,
                 friendName: req.body.requestorName
             }
-            console.log("\nthe requested*********\n"+req.body.requestedId+' '+req.body.requestedName);
             UserModel.updateOne({ 'userId': req.body.requestedId }, { $push: { friendsList: friend } })
                 .exec((err, result) => {
                     if (err) {
-                        console.log(err)
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(err.message, 'User Controller:editUser', 10)
                         let apiResponse = response.generate(true, 'Failed To add in friends list of requestor', 500, null)
                         reject(apiResponse)
@@ -875,7 +840,7 @@ let acceptFriendRequest = (req, res) => {
             res.send(apiResponse)
         })
         .catch((err) => {
-            console.log(err);
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.send(err);
         })
 }
@@ -886,18 +851,16 @@ let rejectFriendRequest = (req, res) => {
 
 
     removeSentRequest = () => {
-        console.log("\nin removeSentRequest");
         return new Promise((resolve, reject) => {
             let sentRequest = {
                 userId: req.body.requestedId,
                 userName: req.body.requestedName
             }
-            console.log("\nthe requestor*********\n"+req.body.requestorId+' '+req.body.requestorName);
             UserModel.updateOne({ 'userId':req.body.requestorId },{$pull : {sentRequests : {$in: sentRequest }}})
             //UserModel.updateOne({ 'userId':req.body.requestorId }, { $push: { sentRequests: sentRequest } })
                 .exec((err, result) => {
                     if (err) {
-                        console.log(err)
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(err.message, 'User Controller:editUser', 10)
                         let apiResponse = response.generate(true, 'Failed To remove sent request from user details', 500, null)
                         reject(apiResponse)
@@ -914,18 +877,16 @@ let rejectFriendRequest = (req, res) => {
     }
 
     removeReceivedRequest = () => {
-        console.log("\nin removeReceivedRequest");
         return new Promise((resolve, reject) => {
             let receivedRequest = {
                 userId: req.body.requestorId,
                 userName: req.body.requestorName
             }
-            console.log("\nthe requestor*********\n"+req.body.requestorId+' '+req.body.requestorName);
             UserModel.updateOne({ 'userId':req.body.requestedId },{$pull : {receivedRequests : {$in: receivedRequest }}})
             //UserModel.updateOne({ 'userId':req.body.requestorId }, { $push: { sentRequests: sentRequest } })
                 .exec((err, result) => {
                     if (err) {
-                        console.log(err)
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(err.message, 'User Controller:editUser', 10)
                         let apiResponse = response.generate(true, 'Failed To remove received request from user details', 500, null)
                         reject(apiResponse)
@@ -950,7 +911,7 @@ let rejectFriendRequest = (req, res) => {
             res.send(apiResponse)
         })
         .catch((err) => {
-            console.log(err);
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.send(err);
         })
 }

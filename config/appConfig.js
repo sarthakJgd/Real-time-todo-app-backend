@@ -1,11 +1,24 @@
 let appConfig = {};
 
-appConfig.port = process.env.port || 8081; //3000;
-appConfig.allowedCorsOrigin = "*";
-appConfig.env = "dev";
+appConfig.env = process.env.NODE_ENV || "development";
+
+if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI must be configured');
+}
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+    throw new Error('JWT_SECRET must be configured with at least 32 characters');
+}
+if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    throw new Error('SMTP_USER and SMTP_PASS must be configured');
+}
+if (appConfig.env === "production" && !process.env.CORS_ORIGIN) {
+    throw new Error('CORS_ORIGIN must be configured in production');
+}
+
+appConfig.port = process.env.PORT || 8081;
+appConfig.allowedCorsOrigin = process.env.CORS_ORIGIN || "http://localhost:4200";
 appConfig.db = {
-    //uri: 'mongodb://127.0.0.1:27017/LiveTodoAppDB',
-    uri: 'mongodb+srv://sarthakJgd:<password>@cluster0-wrg5n.mongodb.net/test?retryWrites=true',
+    uri: process.env.MONGODB_URI,
 }
 appConfig.apiVersion = '/api/v1';
 

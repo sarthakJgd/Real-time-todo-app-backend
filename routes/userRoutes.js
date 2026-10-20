@@ -39,10 +39,10 @@ module.exports.setRouter = (app) => {
             "message": "Login Successful",
             "status": 200,
             "data": {
-                "authToken": "eyJhbGciOiJIUertyuiopojhgfdwertyuVCJ9.MCwiZXhwIjoxNTIwNDI29tIiwibGFzdE5hbWUiE4In19.hAR744xIY9K53JWm1rQ2mc",
+                "authToken": "[redacted-token-example]",
                 "userDetails": {
                 "mobileNumber": 2234435524,
-                "email": "someone@mail.com",
+                "email": "example@example.invalid",
                 "lastName": "Sengar",
                 "firstName": "Rishabh",
                 "userId": "-E9zxTYA8"
@@ -66,10 +66,10 @@ module.exports.setRouter = (app) => {
      * @apiSuccessExample {object} Success-Response:
          {
             data: {
-                authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RpZCI6IjhEanRqc1I3WiIsImlhdCI6MTU1ODI5MzQ3ODA1OSwiZXhwIjoxNTU4Mzc5ODc4LCJzdWIiOiJhdXRoVG9rZW4iLCJpc3MiOiJlZENoYXQiLCJkYXRhIjp7InVzZXJJZCI6ImlEWnRNLXN4VSIsImZpcnN0TmFtZSI6IlNhbWJpdCIsImxhc3ROYW1lIjoiTmF5YWsiLCJlbWFpbCI6InNhbWJpdG5heWFrY3NlQGdtYWlsLmNvbSIsImNvdW50cnlDb2RlIjo5MSwibW9iaWxlTnVtYmVyIjo5OTk5OTU0NTQzLCJ0b3RhbFJlcXVlc3QiOjAsInNlbnRSZXF1ZXN0cyI6W10sInJlY2VpdmVkUmVxdWVzdHMiOltdLCJmcmllbmRzTGlzdCI6W3siZnJpZW5kSWQiOiJpX2ZkR28xNmciLCJmcmllbmROYW1lIjoiTGFrc2htaSBWIE4iLCJfaWQiOiI1Y2UxMjk4YWI1MzA4ZTJhODAwNmFhYWUifSx7ImZyaWVuZElkIjoiMTBhTlFwQ3A0IiwiZnJpZW5kTmFtZSI6InRlc3QgMiIsIl9pZCI6IjVjZTE1NTliYjUzMDhlMmE4MDA2YWJmMyJ9LHsiZnJpZW5kSWQiOiJMYy1MQmk2TkciLCJmcmllbmROYW1lIjoidGVzdCAxIiwiX2lkIjoiNWNlMTU1YzhiNTMwOGUyYTgwMDZhYmY4In1dfX0.JPE4jIyy3xzBG4gjW-EOZMYNRIHzLZzdu6HZ9VdpIRo"
-                userDetails: {userId: "iDZtM-sxU", firstName: "Sambit", lastName: "Nayak", email: "sambitnayakcse@gmail.com",…}
+                authToken: "[redacted-token-example]"
+                userDetails: {userId: "iDZtM-sxU", firstName: "Sambit", lastName: "Nayak", email: "example@example.invalid",…}
                 countryCode: 91
-                email: "sambitnayakcse@gmail.com"
+                email: "example@example.invalid"
                 firstName: "Sambit"
                 friendsList: [{friendId: "i_fdGo16g", friendName: "Lakshmi V N", _id: "5ce1298ab5308e2a8006aaae"},…]
                 0: {friendId: "i_fdGo16g", friendName: "Lakshmi V N", _id: "5ce1298ab5308e2a8006aaae"}
@@ -183,7 +183,7 @@ module.exports.setRouter = (app) => {
                 0: {
                 countryCode: 91
                 createdOn: "2019-05-19T08:42:40.000Z"
-                email: "lakshmivn1995@gmail.com"
+                email: "example@example.invalid"
                 firstName: "Lakshmi"
                 friendsList: [{friendId: "iDZtM-sxU", friendName: "Sambit Nayak", _id: "5ce1298ab5308e2a8006aaad"},…]
                 lastName: "V N"
@@ -197,7 +197,7 @@ module.exports.setRouter = (app) => {
                 1: {
                 countryCode: 91
                 createdOn: "2019-05-19T08:44:17.000Z"
-                email: "sambitnayakcse@gmail.com"
+                email: "example@example.invalid"
                 firstName: "Sambit"
                 friendsList: [{friendId: "i_fdGo16g", friendName: "Lakshmi V N", _id: "5ce1298ab5308e2a8006aaae"},…]
                 lastName: "Nayak"
@@ -211,7 +211,7 @@ module.exports.setRouter = (app) => {
                 2: {
                 countryCode: 91
                 createdOn: "2019-05-19T12:21:12.000Z"
-                email: "test1@test.com"
+                email: "example@example.invalid"
                 firstName: "test"
                 friendsList: [{friendId: "10aNQpCp4", friendName: "test 2", _id: "5ce14d99b5308e2a8006abcb"},…]
                 lastName: "1"
@@ -225,7 +225,7 @@ module.exports.setRouter = (app) => {
                 3: {
                 countryCode: 91
                 createdOn: "2019-05-19T12:21:42.000Z"
-                email: "test2@test.com"
+                email: "example@example.invalid"
                 firstName: "test"
                 friendsList: [{friendId: "Lc-LBi6NG", friendName: "test 1", _id: "5ce14d99b5308e2a8006abcc"},…]
                 lastName: "2"
@@ -239,7 +239,7 @@ module.exports.setRouter = (app) => {
                 4: {
                 countryCode: 91
                 createdOn: "2019-05-19T19:35:22.000Z"
-                email: "test3@test.com"
+                email: "example@example.invalid"
                 firstName: "test"
                 friendsList: []
                 lastName: "3"
