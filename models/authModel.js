@@ -9,9 +9,6 @@ const Auth = new Schema({
   authToken: {
     type: String
   },
-  tokenSecret: {
-    type: String
-  },
   tokenGenerationTime: {
     type: Date,
     default: time.now()

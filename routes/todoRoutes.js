@@ -100,7 +100,7 @@ module.exports.setRouter = function(app){
             data: {
                 countryCode: 91
                 createdOn: "2019-05-19T12:21:42.000Z"
-                email: "test2@test.com"
+                email: "example@example.invalid"
                 firstName: "test"
                 friendsList: [{friendId: "Lc-LBi6NG", friendName: "test 1", _id: "5ce14d99b5308e2a8006abcc"},…]
                 lastName: "2"
@@ -133,7 +133,7 @@ module.exports.setRouter = function(app){
             data: {
                 countryCode: 91
                 createdOn: "2019-05-19T12:21:42.000Z"
-                email: "test2@test.com"
+                email: "example@example.invalid"
                 firstName: "test"
                 friendsList: [{friendId: "Lc-LBi6NG", friendName: "test 1", _id: "5ce14d99b5308e2a8006abcc"},…]
                 lastName: "2"
@@ -166,7 +166,7 @@ module.exports.setRouter = function(app){
             data: {
                 countryCode: 91
                 createdOn: "2019-05-19T12:21:42.000Z"
-                email: "test2@test.com"
+                email: "example@example.invalid"
                 firstName: "test"
                 friendsList: [{friendId: "Lc-LBi6NG", friendName: "test 1", _id: "5ce14d99b5308e2a8006abcc"},…]
                 lastName: "2"

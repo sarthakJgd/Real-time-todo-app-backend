@@ -15,10 +15,8 @@ const TodoStateModel = mongoose.model('TodoStates')
 let createTodo = (req, res) => {
     let todoCreationFunction = () => {
         return new Promise((resolve, reject) => {
-            console.log(req.body)
             if (check.isEmpty(req.body.title)) {
 
-                console.log("403, forbidden request");
                 let apiResponse = response.generate(true, 'required parameters are missing', 403, null)
                 reject(apiResponse)
             } else {
@@ -45,13 +43,11 @@ let createTodo = (req, res) => {
 
                 newTodo.save((err, result) => {
                     if (err) {
-                        console.log('Error Occured.')
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(`Error Occured : ${err}`, 'Database', 10)
                         let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                         reject(apiResponse)
                     } else {
-                        console.log('Success in todo creation')
-                        console.log('todo creation result: ' + result);
                         resolve(result);
                     }
                 }) // end new todo save
@@ -61,10 +57,8 @@ let createTodo = (req, res) => {
 
     let createTodoState = (result) => {
         return new Promise((resolve, reject) => {
-            console.log(req.body)
             if (check.isEmpty(req.body.title)) {
 
-                console.log("403, forbidden request");
                 let apiResponse = response.generate(true, 'required parameters are missing', 403, null)
                 reject(apiResponse)
             } else {
@@ -73,7 +67,6 @@ let createTodo = (req, res) => {
                 let todoId = result.todoId;
                 
                 //let newResult = { ...result, canDelete: false  }
-                console.log("the result is :::::::::::::::::::::::::::::"+ result);
                 let newTodo = new TodoStateModel({
                     todoId: todoId,
                     states: [result],
@@ -82,12 +75,11 @@ let createTodo = (req, res) => {
 
                 newTodo.save((err, result) => {
                     if (err) {
-                        console.log('Error Occured.')
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(`Error Occured : ${err}`, 'Database', 10)
                         let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                         reject(apiResponse)
                     } else {
-                        console.log('Success in todo state creation')
                         resolve(result)
                     }
                 }) // end new todo save
@@ -103,7 +95,7 @@ let createTodo = (req, res) => {
             res.send(apiResponse)
         })
         .catch((error) => {
-            console.log(error)
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.send(error)
         })
 }
@@ -117,7 +109,7 @@ let getAllTodos = (req, res) => {
         .lean()
         .exec((err, result) => {
             if (err) {
-                console.log(err)
+                logger.error('Operation failed', 'ApplicationController', 10)
                 logger.error(err.message, 'Todo Controller: getAllTodo', 10)
                 let apiResponse = response.generate(true, 'Failed To Find Todo Details', 500, null)
                 res.send(apiResponse)
@@ -138,23 +130,20 @@ let deleteTodo = (req, res) => {
         return new Promise((resolve, reject) => {
             if (check.isEmpty(req.params.todoId)) {
 
-                console.log('todoId should be passed')
                 let apiResponse = response.generate(true, 'todoId is missing', 403, null)
                 reject(apiResponse)
             } else {
 
                 TodoModel.remove({ 'todoId': req.params.todoId }, (err, result) => {
                     if (err) {
-                        console.log('Error Occured.')
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(`Error Occured : ${err}`, 'Database', 10)
                         let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                         reject(apiResponse)
                     } else if (check.isEmpty(result)) {
-                        console.log('Todo Not Found.')
                         let apiResponse = response.generate(true, 'Todo Not Found.', 404, null)
                         reject(apiResponse)
                     } else {
-                        console.log('Todo Deletion Success')
                         let apiResponse = response.generate(false, 'Todo Deleted Successfully', 200, result)
                         resolve(apiResponse)
                     }
@@ -167,23 +156,20 @@ let deleteTodo = (req, res) => {
         return new Promise((resolve, reject) => {
             if (check.isEmpty(req.params.todoId)) {
 
-                console.log('todoId should be passed')
                 let apiResponse = response.generate(true, 'todoId is missing', 403, null)
                 reject(apiResponse)
             } else {
 
                 TodoStateModel.remove({ 'todoId': req.params.todoId }, (err, result) => {
                     if (err) {
-                        console.log('Error Occured.')
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(`Error Occured : ${err}`, 'Database', 10)
                         let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                         reject(apiResponse)
                     } else if (check.isEmpty(result)) {
-                        console.log('Todo Not Found.')
                         let apiResponse = response.generate(true, 'Todo Not Found.', 404, null)
                         reject(apiResponse)
                     } else {
-                        console.log('Todo Deletion Success')
                         let apiResponse = response.generate(false, 'Todo State Deleted Successfully', 200, result)
                         resolve(apiResponse)
                     }
@@ -199,7 +185,7 @@ let deleteTodo = (req, res) => {
             res.send(apiResponse)
         })
         .catch((error) => {
-            console.log(error)
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.send(error)
         })
 }
@@ -211,7 +197,6 @@ let viewByTodoId = (req, res) => {
 
     if (check.isEmpty(req.params.todoId)) {
 
-        console.log('todoId should be passed')
         let apiResponse = response.generate(true, 'todoId is missing', 403, null)
         res.send(apiResponse)
     } else {
@@ -220,13 +205,12 @@ let viewByTodoId = (req, res) => {
 
             if (err) {
 
-                console.log('Error Occured.')
+                logger.error('Operation failed', 'ApplicationController', 10)
                 logger.error(`Error Occured : ${err}`, 'Database', 10)
                 let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                 res.send(apiResponse)
             } else if (check.isEmpty(result)) {
 
-                console.log('Todo Not Found.')
                 let apiResponse = response.generate(true, 'Todo Not Found', 404, null)
                 res.send(apiResponse)
             } else {
@@ -247,28 +231,24 @@ let editTodo = (req, res) => {
         return new Promise((resolve, reject) => {
             if (check.isEmpty(req.params.todoId)) {
 
-                console.log('todoId should be passed')
                 let apiResponse = response.generate(true, 'todoId is missing', 403, null)
                 res.send(apiResponse)
             } else {
 
                 let options = req.body;
-                console.log(options);
                 TodoModel.update({ 'todoId': req.params.todoId }, options, { multi: true }).exec((err, result) => {
 
                     if (err) {
 
-                        console.log('Error Occured.')
+                        logger.error('Operation failed', 'ApplicationController', 10)
                         logger.error(`Error Occured : ${err}`, 'Database', 10)
                         let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                         reject(apiResponse)
                     } else if (check.isEmpty(result)) {
 
-                        console.log('Todo Not Found.')
                         let apiResponse = response.generate(true, 'Todo Not Found', 404, null)
                         reject(apiResponse)
                     } else {
-                        console.log('Todo Edited Successfully')
                         let apiResponse = response.generate(false, 'Todo Edited Successfully.', 200, result)
                         resolve(apiResponse)
                     }
@@ -278,33 +258,27 @@ let editTodo = (req, res) => {
     }
 
     let addTodoState = () => {
-        console.log("\nin addTodoState")
         return new Promise((resolve, reject) => {
             if (check.isEmpty(req.params.todoId)) {
 
-                console.log('todoId should be passed')
                 let apiResponse = response.generate(true, 'todoId is missing', 403, null)
                 reject(apiResponse)
             } else {
-                console.log("options" + req.body + "\nreqtodoid" + req.params.todoId);
                 let options = req.body;
-                console.log(options);
                 TodoStateModel.updateOne({ 'todoId': req.params.todoId }, { $push: { states: options } })
                     .exec((err, result) => {
 
                         if (err) {
 
-                            console.log('Error Occured.')
+                            logger.error('Operation failed', 'ApplicationController', 10)
                             logger.error(`Error Occured : ${err}`, 'Database', 10)
                             let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                             reject(apiResponse)
                         } else if (check.isEmpty(result)) {
 
-                            console.log('Todo Not Found.')
                             let apiResponse = response.generate(true, 'Todo Not Found', 404, null)
                             reject(apiResponse)
                         } else {
-                            console.log('Todo state pushed Successfully')
                             let apiResponse = response.generate(false, 'Todo state pushed Successfully.', 200, result)
                             resolve(apiResponse)
                         }
@@ -321,7 +295,7 @@ let editTodo = (req, res) => {
             res.send(apiResponse)
         })
         .catch((error) => {
-            console.log(error)
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.send(error)
         })
 }
@@ -333,7 +307,7 @@ let getTodosByCreatedId = (req, res) => {
         .lean()
         .exec((err, result) => {
             if (err) {
-                console.log(err)
+                logger.error('Operation failed', 'ApplicationController', 10)
                 logger.error(err.message, 'Todo Controller: getAllTodo', 10)
                 let apiResponse = response.generate(true, 'Failed To Find Todo Details', 500, null)
                 res.send(apiResponse)
@@ -354,7 +328,7 @@ let getFriendsTodos = (req, res) => {
         .lean()
         .exec((err, result) => {
             if (err) {
-                console.log(err)
+                logger.error('Operation failed', 'ApplicationController', 10)
                 logger.error(err.message, 'Todo Controller: getAllTodo', 10)
                 let apiResponse = response.generate(true, 'Failed To Find Todo Details', 500, null)
                 res.send(apiResponse)
@@ -375,29 +349,25 @@ let undoTodoState = (req, res) => {
         return new Promise((resolve, reject) => {
             if (check.isEmpty(req.params.todoId)) {
 
-                console.log('todoId should be passed')
                 let apiResponse = response.generate(true, 'todoId is missing', 403, null)
                 reject(apiResponse)
             } else {
 
                 let options = req.body;
-                console.log(options);
                 TodoStateModel.update({ 'todoId': req.params.todoId, 'states.canDelete': true }, { $pop: { states: 1 } })
                     .exec((err, result) => {
 
                         if (err) {
 
-                            console.log('Error Occured.')
+                            logger.error('Operation failed', 'ApplicationController', 10)
                             logger.error(`Error Occured : ${err}`, 'Database', 10)
                             let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                             reject(apiResponse)
                         } else if (check.isEmpty(result)) {
 
-                            console.log('Todo Not Found.')
                             let apiResponse = response.generate(true, 'Todo Not Found', 404, null)
                             reject(apiResponse)
                         } else {
-                            console.log('the poped element is:' + result)
                             let apiResponse = response.generate(false, 'Todo Current State removed Successfully.', 200, result)
                             resolve(apiResponse)
                         }
@@ -410,28 +380,24 @@ let undoTodoState = (req, res) => {
         return new Promise((resolve, reject) => {
             if (check.isEmpty(req.params.todoId)) {
 
-                console.log('todoId should be passed')
                 let apiResponse = response.generate(true, 'todoId is missing', 403, null)
                 res.send(apiResponse)
             } else {
 
                 let options = req.body;
-                console.log(options);
                 TodoStateModel.find({ 'todoId': req.params.todoId }, { 'states': { '$slice': -1 }, todoId: 0 })
                     .exec((err, result) => {
                         if (err) {
 
-                            console.log('Error Occured.')
+                            logger.error('Operation failed', 'ApplicationController', 10)
                             logger.error(`Error Occured : ${err}`, 'Database', 10)
                             let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                             reject(apiResponse)
                         } else if (check.isEmpty(result)) {
 
-                            console.log('Todo Not Found.')
                             let apiResponse = response.generate(true, 'Todo Not Found', 404, null)
                             reject(apiResponse)
                         } else {
-                            console.log('Todo State Data Found Successfully: ' + result)
                             let apiResponse = response.generate(false, 'Todo State Data Found Successfully', 200, result)
                             resolve(result)
                         }
@@ -445,7 +411,6 @@ let undoTodoState = (req, res) => {
         return new Promise((resolve, reject) => {
             if (check.isEmpty(req.params.todoId)) {
 
-                console.log('todoId should be passed')
                 let apiResponse = response.generate(true, 'todoId is missing', 403, null)
                 reject(apiResponse)
             } else {
@@ -454,24 +419,20 @@ let undoTodoState = (req, res) => {
                     return data.states.map(mappedResult => mappedResult)
                 });
                 const finalOption = options[0][0];
-                //console.log('todo final edited value'+result);
-                console.log('finaal object', finalOption);
                 if (finalOption != undefined) {
                     TodoModel.update({ 'todoId': req.params.todoId }, finalOption, { multi: true }).exec((err, result) => {
 
                         if (err) {
 
-                            console.log('Error Occured.')
+                            logger.error('Operation failed', 'ApplicationController', 10)
                             logger.error(`Error Occured : ${err}`, 'Database', 10)
                             let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                             reject(apiResponse)
                         } else if (check.isEmpty(result)) {
 
-                            console.log('Todo Not Found.')
                             let apiResponse = response.generate(true, 'Todo Not Found', 404, null)
                             reject(apiResponse)
                         } else {
-                            console.log('Todo Edited Successfully')
                             let userName = req.query.userName;
                             let apiResponse = response.generate(false, 'Todo edited by '+userName, 200, result)
                             resolve(apiResponse)
@@ -479,7 +440,6 @@ let undoTodoState = (req, res) => {
                     })
                 }
                 else {
-                    console.log('Todo cant be edited beyond this!')
                     let apiResponse = response.generate(true, 'Todo cant be edited beyond this!', 500, null)
                     reject(apiResponse)
                 }
@@ -497,7 +457,7 @@ let undoTodoState = (req, res) => {
             res.send(apiResponse)
         })
         .catch((error) => {
-            console.log(error);
+            logger.error('Operation failed', 'ApplicationController', 10)
             res.send(error);
         })
 }
